@@ -4,9 +4,15 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+// Validate required variables
+if (!process.env.EMAIL || !process.env.PASSWORD) {
+  throw new Error('Missing required environment variables: EMAIL or PASSWORD')
+}
+
 export default defineConfig<TestOptions>({
 
   timeout: 40000,
+  globalTimeout: 60000,
 
   testDir: 'tests',
 
