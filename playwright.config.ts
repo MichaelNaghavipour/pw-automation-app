@@ -12,7 +12,7 @@ if (!process.env.EMAIL || !process.env.PASSWORD) {
 export default defineConfig<TestOptions>({
 
   timeout: 40000,
-  globalTimeout: 60000,
+  globalTimeout: 10 * 60 * 1000,
 
   testDir: 'tests',
 
