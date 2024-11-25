@@ -1,75 +1,48 @@
 import { defineConfig, devices } from '@playwright/test';
 import type { TestOptions } from './test-options';
 import * as dotenv from 'dotenv';
-import { Token } from '@angular/compiler';
 
 dotenv.config();
 
 export default defineConfig<TestOptions>({
-  timeout: 40000,
-  // globalTimeout: 60000,
-  expect: {
-    timeout: 2000,
-    toHaveScreenshot: {maxDiffPixels: 50}
-  },
 
-  retries: 1,
-  reporter: [
-    process.env.CI ? ["dot"] : ["list"],
-    [
-      "@argos-ci/playwright/reporter",
-      {
-        // Upload to Argos on CI only.
-        uploadToArgos: !!process.env.CI,
-        token: "f5e6e0573b0e5e869e43689ec088cce3e2c3f41f",
-      },
-    ],
-    ['json', {outputFile: 'test-results/jsonReport.json'}],
-    ['junit', {outputFile: 'test-results/junitReport.xml'}],
-    // ['allure-playwright'],
-    ['html']
-  ],
+  timeout: 40000,
+
+  testDir: 'tests',
+
+  // Run all tests in parallel.
+  fullyParallel: true,
+
+  // Retry on CI only.
+  retries: process.env.CI ? 2 : 0,
+
+  // Opt out of parallel tests on CI.
+  workers: process.env.CI ? 1 : undefined,
+    
+  // Reporter to use
+  reporter: 'html',
 
   use: {
     globalsQaURL: 'https://www.globalsqa.com/demo-site/draganddrop/',
-    baseURL: process.env.DEV === '1' ? 'http://localhost:4201/'
-          : process.env.STAGING === '1' ? 'http://localhost:4202/'
-          : 'http://localhost:4200/',
+    baseURL: 'http://localhost:4200/',
 
     trace: 'on-first-retry',
     screenshot: "only-on-failure",
-    actionTimeout: 20000,
-    navigationTimeout: 25000,
     video: {
-      mode: 'off',
-      size: {width: 1920, height: 1080}
+      mode: 'on',
     }
   },
 
   projects: [
     {
-      name: 'dev',
-      use: { 
-        browserName: 'chromium',
-        baseURL: 'http://localhost:4200/'
-      },
-    },
-    {
       name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
     },
-
     {
       name: 'firefox',
       use: { 
         browserName: 'firefox'
       },
-    },
-    {
-      name: 'pageObjectsFullScreen',
-      testMatch: 'usePageObjects.spec.ts',
-      use: {
-        viewport: {width: 1920, height: 1018}
-      }
     },
     {
       name: 'mobile',
@@ -79,9 +52,10 @@ export default defineConfig<TestOptions>({
       }
     }
   ],
-
+  // Run your local dev server before starting the tests.
   webServer: {
     command: 'npm run start',
-    url: 'http://localhost:4200/'
-  }
+    url: 'http://localhost:4200/',
+    reuseExistingServer: true,
+  },
 });
