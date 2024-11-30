@@ -18,7 +18,7 @@ export class NavigationPage extends HelperBase{
         await this.page.getByText('Datepicker').click()
     }
 
-    async smartTablePage() {
+    async smartTablePage() {             
         await this.selectGroupMenuItem('Tables & Data')
         await this.page.getByText('Smart Table').click()
     }
