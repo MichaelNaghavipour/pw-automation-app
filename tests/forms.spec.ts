@@ -1,12 +1,17 @@
 import { test, expect } from '@playwright/test'
+import { PageManager } from '../page-objects/pageManager'
 
 test.beforeEach( async ({ page }) => {
+    console.log(`Running ${test.info().title}`)
     page.goto('/')
     await page.getByText('Forms').click()
-    await page.getByText('Form Layouts').click()
 })
 
 test.describe('Form Layouts', () => {
+
+    test.beforeEach( async ({ page }) => {
+        await page.getByText('Form Layouts').click()
+    })
 
     test('Inline form', async ({ page }) => {
         const inlineForm = page.locator('nb-card', {hasText: 'Inline form'})
@@ -74,9 +79,39 @@ test.describe('Form Layouts', () => {
 
 test.describe('Datepicker', () => {
     
-    test('Datepicker', async ({ page }) => {
-        await page.getByText('Forms').click()
-        await page.getByText('Form Layouts').click()
+    test.beforeEach( async ({ page }) => {
+        const pm = new PageManager(page)
+        await pm.navigateTo().datePickerPage()
     })
+
+    test('Common Datepicker', async ({ page }) => {
+        const calendarInputField = page.getByPlaceholder('Form Picker')
+        await calendarInputField.click()
+
+        let date = new Date()
+        date.setDate(date.getDate() + 120 )
+        const expectedDate = date.getDate().toString()
+        const expectedYear = date.getFullYear()
+        const expectedMonthShort = date.toLocaleString('En-US', {month: 'short'})
+        const expectedMonthLong = date.toLocaleString('En-US', {month: 'long'})
+        const dateToAssert = `${expectedMonthShort} ${expectedDate}, ${expectedYear}`
+        let calendarMonthAndYear = await page.locator('nb-calendar-view-mode').textContent()
+        const expectedMonthAndYear = ` ${expectedMonthLong} ${expectedYear} `
+        while(!calendarMonthAndYear.includes(expectedMonthAndYear)) {
+            await page.locator('nb-calendar-pageable-navigation [data-name="chevron-right"]').click()
+            calendarMonthAndYear = await page.locator('nb-calendar-view-mode').textContent()
+        }
+        await page.locator('[class="day-cell ng-star-inserted"]').getByText(expectedDate, { exact: true }).click()
+        await expect(calendarInputField).toHaveValue(dateToAssert)
+    })
+
+    test('Datepicker With Range', async ({ page }) => {
+        const pm = new PageManager(page)
+        const rangePicker = page.getByPlaceholder('Range Picker')
+        await rangePicker.click()
+        await pm.onDatePickerPage().selectCommonDatePickerDateFromToday(20)
+    })
+
+
 })
 
