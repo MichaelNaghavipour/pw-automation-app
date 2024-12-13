@@ -85,33 +85,19 @@ test.describe('Datepicker', () => {
     })
 
     test('Common Datepicker', async ({ page }) => {
-        const calendarInputField = page.getByPlaceholder('Form Picker')
-        await calendarInputField.click()
-
-        let date = new Date()
-        date.setDate(date.getDate() + 120 )
-        const expectedDate = date.getDate().toString()
-        const expectedYear = date.getFullYear()
-        const expectedMonthShort = date.toLocaleString('En-US', {month: 'short'})
-        const expectedMonthLong = date.toLocaleString('En-US', {month: 'long'})
-        const dateToAssert = `${expectedMonthShort} ${expectedDate}, ${expectedYear}`
-        let calendarMonthAndYear = await page.locator('nb-calendar-view-mode').textContent()
-        const expectedMonthAndYear = ` ${expectedMonthLong} ${expectedYear} `
-        while(!calendarMonthAndYear.includes(expectedMonthAndYear)) {
-            await page.locator('nb-calendar-pageable-navigation [data-name="chevron-right"]').click()
-            calendarMonthAndYear = await page.locator('nb-calendar-view-mode').textContent()
-        }
-        await page.locator('[class="day-cell ng-star-inserted"]').getByText(expectedDate, { exact: true }).click()
-        await expect(calendarInputField).toHaveValue(dateToAssert)
+        const pm = new PageManager(page)
+        await pm.onDatePickerPage().selectCommonDatePickerDateFromToday(10)
     })
 
     test('Datepicker With Range', async ({ page }) => {
         const pm = new PageManager(page)
-        const rangePicker = page.getByPlaceholder('Range Picker')
-        await rangePicker.click()
-        await pm.onDatePickerPage().selectCommonDatePickerDateFromToday(20)
+        await pm.onDatePickerPage().selectDatePickerWithRangeFromToday(6, 12)
     })
 
+    test('Datepicker With Disabled Min Max Values', async ({ page }) => {
+        const pm = new PageManager(page)
+        await pm.onDatePickerPage().selectDatePickerWithDisabledMinMaxValuesFromToday(0)
+    })
 
 })
 
