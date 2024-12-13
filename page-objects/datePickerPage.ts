@@ -21,9 +21,17 @@ export class DatePickerPage extends HelperBase {
         await expect(calendarInputField).toHaveValue(`${dateToAssertStart} - ${dateToAssertEnd}`)
     }
 
+    async selectDatePickerWithDisabledMinMaxValuesFromToday(currentDay: number) {
+        let date = new Date()
+        const calendarInputField = this.page.getByPlaceholder('Min Max Picker')
+        await calendarInputField.click()
+        const dateToAssert = await this.selectDateInTheCalendar(currentDay)
+        await expect(calendarInputField).toHaveValue(dateToAssert)
+    }
+
     private async selectDateInTheCalendar(numberOfDaysFromToday: number) {
         let date = new Date()
-        date.setDate(date.getDate() + numberOfDaysFromToday )
+        date.setDate(date.getDate() + numberOfDaysFromToday)
         const expectedDate = date.getDate().toString()
         const expectedYear = date.getFullYear()
         const expectedMonthShort = date.toLocaleString('En-US', {month: 'short'})
