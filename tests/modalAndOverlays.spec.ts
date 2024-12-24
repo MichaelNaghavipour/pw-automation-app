@@ -36,3 +36,19 @@ test.describe('Modal and Overlays', () => {
         expect(returnResultFromDialog).toContainText('John Doe')
     })
 })
+
+test('Window Form', async ({ page }) => {
+    await page.getByText('Window').click()
+    await page.getByRole('button', {name: 'Open window form'}).click()
+    expect(page.locator('nb-window')).toContainText('Window')
+    await page.getByRole('textbox').first().fill('This is a sample subject') // filling the first text
+    await page.getByRole('textbox').nth(1).fill('This is a sample text') // filling the second text using 'nth()'
+    const minusIcon = page.locator('nb-icon[icon="minus-outline"]')
+    const collapseIcon = page.locator('nb-icon[icon="collapse-outline"]')
+    const closeIcon = page.locator('nb-icon[icon="close-outline"]')
+    // check if all icons are visible
+    expect(minusIcon).toBeVisible()
+    expect(collapseIcon).toBeVisible()
+    expect(closeIcon).toBeVisible()
+    await closeIcon.click()
+})
