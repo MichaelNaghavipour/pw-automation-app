@@ -7,8 +7,8 @@ test.beforeEach( async ({ page }) => {
     await page.getByText('Modal & Overlays').click()
 })
 
-// The beginning of the "Modal & Overlays" test suite
-test.describe('Modal and Overlays', () => {
+// Modal & Overlays -> Dialog
+test.describe('Dialog', () => {
     // Navigate to the Dialog page before each test
     test.beforeEach( async ({ page }) => {
         await page.getByText('Dialog').click()
@@ -37,6 +37,7 @@ test.describe('Modal and Overlays', () => {
     })
 })
 
+// Modal & Overlays -> Windows
 test('Window Form', async ({ page }) => {
     await page.getByText('Window').click()
     await page.getByRole('button', {name: 'Open window form'}).click()
@@ -51,4 +52,26 @@ test('Window Form', async ({ page }) => {
     expect(collapseIcon).toBeVisible()
     expect(closeIcon).toBeVisible()
     await closeIcon.click()
+    // check that the window is closed 
+    expect(page.locator('nb-window')).toHaveCount(0)
+})
+
+// Modal & Overlays -> Popover
+test.describe('Popover', () => {
+
+    test.beforeEach( async ({ page }) => {
+        await page.getByText('Popover').click()
+    })
+    // check whether a popover is working properly when hovering over an element
+    test('Popover Position', async ({ page }) => {
+        await page.getByRole('button', {name: 'Top'}).hover()
+        await page.waitForSelector('text=Hello, how are you today?');
+        await expect(page.getByText('Hello, how are you today?')).toBeVisible()
+    })
+
+    // check whether a popover is working properly when clicking on an element
+    test('Simple Popovers', async ({ page }) => {
+        await page.getByRole('button', {name: 'on click'}).click()
+        await expect(page.getByText('Hello, how are you today?')).toBeVisible()
+    })
 })
