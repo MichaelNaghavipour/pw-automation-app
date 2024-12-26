@@ -75,3 +75,41 @@ test.describe('Popover', () => {
         await expect(page.getByText('Hello, how are you today?')).toBeVisible()
     })
 })
+
+// Modal & Overlays -> Toastr
+test('Toastr', async ({ page }) => {
+    await page.getByText('Toastr').click()
+    await page.getByRole('button', { name: 'top-right' }).click()
+    await page.locator('[ng-reflect-value="bottom-left"]').click()
+    await expect(page.getByRole('button', { name: 'bottom-left' })).toBeVisible()
+
+    const title = 'Playwright Framework'
+    const content = 'Test Automation is Awesome'
+    const timeout = '1500'
+
+    await page.locator('input[name="title"]').fill(title)
+    await page.locator('input[name="content"]').fill(content)
+    await page.locator('input[name="timeout"]').fill(timeout)
+    await page.getByRole('button', { name: 'Show toast'}).click()
+    // make sure toast is visibile
+    await expect(page.locator('nb-toast')).toBeVisible()
+    const toastTextArray = await page.locator('nb-toast').allTextContents()
+    const toastText = toastTextArray[0]
+    // remove variable prefix before texts
+    const toastTextWithoutNumber = toastText.replace(/^Toast \d+\.\s*/, '')
+    expect(toastText).toContain(`${title}${content}`)
+    // select another toast type from the list
+    await page.getByRole('button', { name: 'primary'}).click()
+    await page.locator('[ng-reflect-value="info"]').click()
+    await expect(page.getByRole('button', { name: 'info'})).toBeVisible()
+
+    // uncheck all checkboxes
+    await page.getByText('Hide on click').uncheck()
+    await page.getByText('Prevent arising of duplicate toast').uncheck()
+    await page.getByText('Show toast with icon').uncheck()
+
+    // assert that the checkboxes are unchecked
+    expect(await page.getByText('Hide on click').isChecked()).toBe(false)
+    expect(await page.getByText('Prevent arising of duplicate toast').isChecked()).toBe(false)
+    expect(await page.getByText('Show toast with icon').isChecked()).toBe(true)
+})
