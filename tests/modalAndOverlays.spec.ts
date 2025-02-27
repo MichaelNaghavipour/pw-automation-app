@@ -113,3 +113,24 @@ test('Toastr', async ({ page }) => {
     expect(await page.getByText('Prevent arising of duplicate toast').isChecked()).toBe(false)
     expect(await page.getByText('Show toast with icon').isChecked()).toBe(true)
 })
+
+// Modal & Overlays -> Tooltip
+test.describe('Tooltip', () => {
+
+    test.beforeEach( async ({ page }) => {
+        await page.getByText('Tooltip').click()
+    })
+    // check tooltip shows up with correct text when mouse hover
+    test('Tooltip with icon', async ({ page }) => {
+        const tooltipWithIcon = page.locator('nb-card', { hasText: 'Tooltip With Icon'})
+        await tooltipWithIcon.getByRole('button', { name: 'Show Tooltip'}).first().hover()
+        await expect(page.locator('nb-tooltip')).toHaveText('This is a tooltip')
+    })
+    // check tooltip shows up with correct text and color when mouse hover
+    test('Colored Tooltips', async ({ page }) => {
+        const coloredTooltips = page.locator('nb-card', { hasText: 'Colored Tooltips'})
+        await coloredTooltips.getByRole('button', { name: 'Warning'}).hover()
+        await expect(page.locator('nb-tooltip')).toHaveText('This is a tooltip')
+        await expect(page.locator('nb-tooltip')).toHaveCSS('background-color', 'rgb(255, 170, 0)')
+    })
+})

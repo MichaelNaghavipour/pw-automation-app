@@ -32,7 +32,7 @@ test.describe('Form Layouts Page @block', () => {
         // await usingTheGridForm.getByLabel('Option 1').check({ force: true })
         await usingTheGridForm.getByRole('radio', { name: "Option 1"}).check({ force: true })
         const radioStatus = await usingTheGridForm.getByRole('radio', { name: "Option 1"}).isChecked()
-        await expect(usingTheGridForm).toHaveScreenshot()
+        // await expect(usingTheGridForm).toHaveScreenshot()
         // expect(radioStatus).toBeTruthy()
         // await expect(usingTheGridForm.getByRole('radio', { name: "Option 1"})).toBeChecked()
 

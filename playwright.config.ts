@@ -51,6 +51,12 @@ export default defineConfig<TestOptions>({
       },
     },
     {
+      name: 'webkit',
+      use: { 
+        browserName: 'webkit'
+      },
+    },
+    {
       name: 'mobile',
       testMatch: 'testMobile.spec.ts',
       use: {
