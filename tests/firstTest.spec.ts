@@ -32,6 +32,7 @@ test('Locator syntax rules', async ({ page}) => {
     page.locator(':text-is("Using the Grid"')
 })
 
+// Recommended as Best Practices
 test('User Facing Locators', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Email' }).first().click()
     await page.getByRole('button', { name: 'Sign in' }).first().click()
