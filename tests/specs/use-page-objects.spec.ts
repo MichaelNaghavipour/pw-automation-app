@@ -1,19 +1,25 @@
 import { test, expect } from '@playwright/test'
-import { PageManager } from '../page-objects/pageManager'
 import { faker } from '@faker-js/faker'
 import { argosScreenshot } from "@argos-ci/playwright";
+import { PageManager } from '../pages/page-manager';
 
 test.beforeEach( async ({ page }) => {
     await page.goto('/')
 })
 
-test('Navigate to form page @regression', async ({ page }) => {
+test('Navigate to Menu Items @regression', async ({ page }) => {
     const pm = new PageManager(page)
     await pm.navigateTo().formLayoutsPage()
     await pm.navigateTo().datePickerPage()
-    await pm.navigateTo().smartTablePage()
-    await pm.navigateTo().toastrPage()  
+    await pm.navigateTo().dialogPage()
+    await pm.navigateTo().windowPage()
+    await pm.navigateTo().popoverPage()
+    await pm.navigateTo().toastrPage()
     await pm.navigateTo().tooltipPage()
+    await pm.navigateTo().calendarPage()
+    await pm.navigateTo().eChartsPage()
+    await pm.navigateTo().smartTablePage()
+    await pm.navigateTo().treeGridPage()
 })
 
 test.only('Parameterized Methods @smoke', async ({ page }) => {

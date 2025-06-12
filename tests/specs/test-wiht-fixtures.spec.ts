@@ -1,5 +1,4 @@
-import { test } from '../test-options'
-import { PageManager } from '../page-objects/pageManager'
+import { test } from '../../test-options'
 import { faker } from '@faker-js/faker'
 
 test('Parameterized Methods', async ({ pageManager }) => {

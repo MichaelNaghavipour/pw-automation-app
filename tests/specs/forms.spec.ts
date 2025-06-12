@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { PageManager } from '../page-objects/pageManager'
+import { PageManager } from '../pages/page-manager'
 
 test.beforeEach( async ({ page }) => {
     console.log(`Running ${test.info().title}`)
